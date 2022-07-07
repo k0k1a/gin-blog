@@ -1,8 +1,9 @@
 package setting
 
 import (
+	"fmt"
 	"github.com/go-ini/ini"
-	"log"
+	"github.com/k0k1a/go-gin-example/pkg/logging"
 	"time"
 )
 
@@ -23,7 +24,8 @@ func init() {
 	var err error
 	Cfg, err = ini.Load("conf/app.ini")
 	if err != nil {
-		log.Fatalf("Fail to parse 'conf/app.ini':%v", err)
+		//log.Fatalf("Fail to parse 'conf/app.ini':%v", err)
+		logging.Fatal(fmt.Sprintf("Fail to parse 'conf/app.ini':%v", err))
 	}
 	LoadBase()
 	LoadServer()
@@ -37,7 +39,8 @@ func LoadBase() {
 func LoadServer() {
 	sec, err := Cfg.GetSection("server")
 	if err != nil {
-		log.Fatalf("Fail to get session 'server':%v", err)
+		//log.Fatalf("Fail to get session 'server':%v", err)
+		logging.Fatal(fmt.Sprintf("Fail to get session 'server':%v", err))
 	}
 	HttpPort = sec.Key("HTTP_PORT").MustInt(8000)
 	ReadTimeout = time.Duration(sec.Key("READ_TIMEOUT").MustInt(60)) * time.Second
@@ -47,7 +50,8 @@ func LoadServer() {
 func LoadApp() {
 	sec, err := Cfg.GetSection("app")
 	if err != nil {
-		log.Fatalf("Fail to get session 'app':%v", err)
+		//log.Fatalf("Fail to get session 'app':%v", err)
+		logging.Fatal(fmt.Sprintf("Fail to get session 'app':%v", err))
 	}
 	JwtSecret = sec.Key("JWT_SECRET").MustString("!@)*#)!@U#@*!@!)")
 	PageSize = sec.Key("PAGE_SIZE").MustInt(10)
