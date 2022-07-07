@@ -12,10 +12,10 @@ import (
 var db *gorm.DB
 
 type Model struct {
-	ID         int `gorm:"primaryKey" json:"id,omitempty"`
-	CreatedOn  int `gorm:"autoCreateTime" json:"created_on,omitempty"`
-	ModifiedOn int `gorm:"autoUpdateTime" json:"modified_on,omitempty"`
-	DeletedOn  int `json:"deleted_on,omitempty"`
+	ID         int            `gorm:"primaryKey" json:"id,omitempty"`
+	CreatedOn  int            `gorm:"autoCreateTime" json:"created_on,omitempty"`
+	ModifiedOn int            `gorm:"autoUpdateTime" json:"modified_on,omitempty"`
+	DeletedOn  gorm.DeletedAt `json:"deleted_on,omitempty"`
 }
 
 func init() {
