@@ -29,6 +29,11 @@ func ExistTagByName(name string) bool {
 	return false
 }
 
+func ExistTagById(id int) bool {
+	result := db.First(&Tag{}, id)
+	return result.RowsAffected > 0
+}
+
 func AddTag(name string, state int, createdBy string) bool {
 	db.Create(&Tag{
 		Name:      name,
@@ -36,4 +41,15 @@ func AddTag(name string, state int, createdBy string) bool {
 		State:     state,
 	})
 	return true
+}
+
+func DeleteTag(id int) bool {
+	db.Delete(&Tag{}, id)
+	return true
+}
+
+// EditTag 修改
+func EditTag(id int, data interface{}) bool {
+	result := db.Model(&Tag{}).Where("id=?", id).Updates(data)
+	return result.RowsAffected > 0
 }
