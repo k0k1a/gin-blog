@@ -30,14 +30,19 @@ const (
 )
 
 func init() {
-	filePath := getLogFileFullPath()
-	F = openLogFile(filePath)
+	var err error
+	filePath := getLogFilePath()
+	filename := getLogFileName()
+	F, err = openLogFile(filename, filePath)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	logger = log.New(io.MultiWriter(F, os.Stdout), DefaultPrefix, log.LstdFlags)
 }
 
 func setPrefix(level Level) {
 	if _, file, line, ok := runtime.Caller(DefaultCallerDepth); ok {
-		logPrefix = fmt.Sprintf("[%s][%s:%d]", levelFlags[level], len(filepath.Base(file)), line)
+		logPrefix = fmt.Sprintf("[%s][%s:%d]", levelFlags[level], filepath.Base(file), line)
 	} else {
 		logPrefix = fmt.Sprintf("[%s]", levelFlags[level])
 	}
