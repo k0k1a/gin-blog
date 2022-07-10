@@ -2,11 +2,21 @@ package main
 
 import (
 	"fmt"
+	"github.com/k0k1a/go-gin-example/models"
+	"github.com/k0k1a/go-gin-example/pkg/gredis"
+	"github.com/k0k1a/go-gin-example/pkg/logging"
 	"github.com/k0k1a/go-gin-example/pkg/setting"
 	"github.com/k0k1a/go-gin-example/routers"
 	"log"
 	"net/http"
 )
+
+func init() {
+	setting.SetUp()
+	models.SetUp()
+	logging.SetUp()
+	gredis.SetUp()
+}
 
 func main() {
 	router := routers.InitRouter()

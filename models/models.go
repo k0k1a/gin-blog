@@ -18,7 +18,7 @@ type Model struct {
 	DeletedOn  gorm.DeletedAt `json:"deleted_on,omitempty"`
 }
 
-func init() {
+func SetUp() {
 	var (
 		err                                       error
 		dbName, user, password, host, tablePrefix string

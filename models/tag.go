@@ -1,5 +1,7 @@
 package models
 
+import "gorm.io/gorm"
+
 type Tag struct {
 	Model
 
@@ -29,9 +31,12 @@ func ExistTagByName(name string) bool {
 	return false
 }
 
-func ExistTagById(id int) bool {
+func ExistTagById(id int) (bool, error) {
 	result := db.First(&Tag{}, id)
-	return result.RowsAffected > 0
+	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
+		return false, result.Error
+	}
+	return result.RowsAffected > 0, nil
 }
 
 func AddTag(name string, state int, createdBy string) bool {

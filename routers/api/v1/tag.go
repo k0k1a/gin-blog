@@ -83,7 +83,7 @@ func EditTag(c *gin.Context) {
 	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
 		code = e.SUCCESS
-		if models.ExistTagById(id) {
+		if exists, _ := models.ExistTagById(id); exists {
 			data := make(map[string]interface{})
 			data["modified_by"] = modifiedBy
 			if name != "" {
@@ -114,7 +114,7 @@ func DeleteTag(c *gin.Context) {
 	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
 		code = e.SUCCESS
-		if models.ExistTagById(id) {
+		if exists, _ := models.ExistTagById(id); exists {
 			models.DeleteTag(id)
 		} else {
 			code = e.ERROR_NOT_EXIST_TAG

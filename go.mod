@@ -13,13 +13,14 @@ replace (
 require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-ini/ini v1.66.6
+	github.com/gomodule/redigo v2.0.0+incompatible
 	gorm.io/driver/mysql v1.3.4
 	gorm.io/gorm v1.23.7
 )
 
 require (
-	github.com/astaxie/beego v1.12.3 // indirect
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/astaxie/beego v1.12.3
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
