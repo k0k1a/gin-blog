@@ -18,6 +18,8 @@ require (
 	gorm.io/gorm v1.23.7
 )
 
+require github.com/tealeg/xlsx v1.0.5 // indirect
+
 require (
 	github.com/astaxie/beego v1.12.3
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
