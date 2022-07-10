@@ -11,24 +11,28 @@ type Tag struct {
 	State      int    `json:"state,omitempty"`
 }
 
-func GetTags(pageNum int, pageSize int, maps map[string]interface{}) (tags []Tag) {
-	db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags)
+func GetTags(pageNum int, pageSize int, maps map[string]interface{}) (tags []Tag, err error) {
+	if err := db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags).Error; err != nil {
+		return nil, err
+	}
 	return
 }
 
-func GetTagTotal(maps map[string]interface{}) (count int64) {
-	db.Model(&Tag{}).Where(maps).Count(&count)
+func GetTagTotal(maps map[string]interface{}) (count int64, err error) {
+	if err = db.Model(&Tag{}).Where(maps).Count(&count).Error; err != nil {
+		return 0, err
+	}
 	return
 }
 
 //ExistTagByName 根据name判断tag是否存在
-func ExistTagByName(name string) bool {
+func ExistTagByName(name string) (bool, error) {
 	var tag Tag
 	result := db.Select("id").Where("name=?", name).Find(&tag)
-	if rows := result.RowsAffected; rows > 0 {
-		return true
+	if err := result.Error; err != nil {
+		return false, err
 	}
-	return false
+	return result.RowsAffected > 0, nil
 }
 
 func ExistTagById(id int) (bool, error) {
@@ -39,22 +43,30 @@ func ExistTagById(id int) (bool, error) {
 	return result.RowsAffected > 0, nil
 }
 
-func AddTag(name string, state int, createdBy string) bool {
-	db.Create(&Tag{
+func AddTag(name string, state int, createdBy string) error {
+	tag := Tag{
 		Name:      name,
 		CreatedBy: createdBy,
 		State:     state,
-	})
-	return true
+	}
+	if err := db.Create(&tag).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
-func DeleteTag(id int) bool {
-	db.Delete(&Tag{}, id)
-	return true
+func DeleteTag(id int) error {
+	if err := db.Delete(&Tag{}, id).Error;err!=nil{
+		return err
+	}
+	return nil
 }
 
 // EditTag 修改
-func EditTag(id int, data interface{}) bool {
+func EditTag(id int, data interface{}) error {
 	result := db.Model(&Tag{}).Where("id=?", id).Updates(data)
-	return result.RowsAffected > 0
+	if err := result.Error; err != nil {
+		return err
+	}
+	return nil
 }
