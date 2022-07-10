@@ -3,6 +3,7 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/k0k1a/go-gin-example/middleware/jwt"
+	"github.com/k0k1a/go-gin-example/pkg/export"
 	"github.com/k0k1a/go-gin-example/pkg/setting"
 	"github.com/k0k1a/go-gin-example/pkg/upload"
 	"github.com/k0k1a/go-gin-example/routers/api"
@@ -17,15 +18,11 @@ func InitRouter() *gin.Engine {
 	gin.SetMode(setting.ServerSetting.RunMode)
 
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
-
-	r.GET("/test", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "test",
-		})
-	})
+	r.StaticFS("/export", http.Dir(export.GetExcelFullPath()))
 
 	r.POST("/auth", api.GetAuth)
 	r.POST("/upload", api.UploadImage)
+
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(jwt.JWT())
 	{
@@ -33,7 +30,9 @@ func InitRouter() *gin.Engine {
 		apiv1.POST("/tags", v1.AddTag)
 		apiv1.PUT("/tags/:id", v1.EditTag)
 		apiv1.DELETE("/tags/:id", v1.DeleteTag)
-		apiv1.POST("/tags/export", v1.ExportTag)
+		r.POST("/tags/export", v1.ExportTag)
+		//导入标签
+		apiv1.POST("/tags/import", v1.ImportTag)
 
 		apiv1.GET("/articles/:id", v1.GetArticle)
 		apiv1.GET("/articles", v1.GetArticles)
