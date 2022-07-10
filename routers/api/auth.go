@@ -3,10 +3,10 @@ package api
 import (
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
-	"github.com/k0k1a/go-gin-example/models"
+	"github.com/k0k1a/go-gin-example/pkg/app"
 	"github.com/k0k1a/go-gin-example/pkg/e"
-	"github.com/k0k1a/go-gin-example/pkg/logging"
 	"github.com/k0k1a/go-gin-example/pkg/util"
+	"github.com/k0k1a/go-gin-example/service/auth_service"
 	"net/http"
 )
 
@@ -16,33 +16,39 @@ type auth struct {
 }
 
 func GetAuth(c *gin.Context) {
-	username := c.Query("username")
-	password := c.Query("password")
+	appG := app.Gin{C: c}
+	username := c.PostForm("username")
+	password := c.PostForm("password")
 
 	valid := validation.Validation{}
 
-	data := make(map[string]interface{})
-	code := e.INVALID_PARAMS
-	if ok, _ := valid.Valid(&auth{username, password}); ok {
-		if isExist := models.CheckAuth(username, password); isExist {
-			if token, err := util.GenerateToken(username, password); err != nil {
-				code = e.ERROR_AUTH_TOKEN
-			} else {
-				data["token"] = token
-				code = e.SUCCESS
-			}
-		} else {
-			code = e.ERROR_AUTH
-		}
-	} else {
-		for _, err := range valid.Errors {
-			//log.Println(err.Key, err.Message)
-			logging.Info(err.Key, err.Message)
-		}
+	ok, _ := valid.Valid(&auth{username, password})
+	if !ok {
+		app.MarkErrors(valid.Errors)
+		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": data,
+
+	authService := auth_service.Auth{
+		Username: username, Password: password,
+	}
+	check, err := authService.Check()
+
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR_AUTH_CHECK_TOKEN_FAIL, nil)
+		return
+	}
+	if !check {
+		appG.Response(http.StatusOK, e.ERROR_AUTH, nil)
+		return
+	}
+
+	token, err := util.GenerateToken(username, password)
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR_AUTH_TOKEN, nil)
+		return
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
+		"token": token,
 	})
 }
