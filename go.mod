@@ -11,17 +11,20 @@ replace (
 )
 
 require (
+	github.com/360EntSecGroup-Skylar/excelize v1.4.1
+	github.com/boombuler/barcode v1.0.1
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-ini/ini v1.66.6
 	github.com/gomodule/redigo v2.0.0+incompatible
+	github.com/tealeg/xlsx v1.0.5
 	gorm.io/driver/mysql v1.3.4
 	gorm.io/gorm v1.23.7
 )
 
 require (
-	github.com/360EntSecGroup-Skylar/excelize v1.4.1 // indirect
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
-	github.com/tealeg/xlsx v1.0.5 // indirect
+	golang.org/x/image v0.0.0-20220617043117-41969df76e82 // indirect
 )
 
 require (

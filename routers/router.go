@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/k0k1a/go-gin-example/middleware/jwt"
 	"github.com/k0k1a/go-gin-example/pkg/export"
+	"github.com/k0k1a/go-gin-example/pkg/qrcode"
 	"github.com/k0k1a/go-gin-example/pkg/setting"
 	"github.com/k0k1a/go-gin-example/pkg/upload"
 	"github.com/k0k1a/go-gin-example/routers/api"
@@ -19,6 +20,7 @@ func InitRouter() *gin.Engine {
 
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
 	r.StaticFS("/export", http.Dir(export.GetExcelFullPath()))
+	r.StaticFS("/qrcode", http.Dir(qrcode.GetQrCodeFullPath()))
 
 	r.POST("/auth", api.GetAuth)
 	r.POST("/upload", api.UploadImage)
@@ -39,6 +41,7 @@ func InitRouter() *gin.Engine {
 		apiv1.POST("/articles", v1.AddArticle)
 		apiv1.PUT("/articles/:id", v1.EditArticle)
 		apiv1.DELETE("/articles/:id", v1.DeleteArticle)
+		apiv1.POST("/articles/poster/generate", v1.GenerateArticlePoster)
 	}
 	return r
 }
