@@ -21,8 +21,8 @@ WORKDIR /dist
 
 # 将二进制文件从/build 目录复制到 /dist
 RUN cp /build/app . \
-    && cp /build/conf/app.ini . \
-    && cp -r /build/runtime . 
+    && cp -r /build/conf . \
+    && cp -r /build/runtime .
 
 # 声明服务端口
 EXPOSE 8000
