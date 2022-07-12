@@ -19,8 +19,10 @@ RUN go build -o app .
 # 移动到用于存放生成的二进制文件的/dist目录
 WORKDIR /dist
 
-# 将二进制文件从/build 目录复制到这里
-RUN ["cp","/build/app","."]
+# 将二进制文件从/build 目录复制到 /dist
+RUN cp /build/app . \
+    && cp /build/conf/app.ini . \
+    && cp -r /build/runtime . 
 
 # 声明服务端口
 EXPOSE 8000
